@@ -71,7 +71,7 @@ export async function getfiledata(prompt: string, file: string) {
       
         let extractedText = "";
         try {
-          const response = await axios.post('https://flaskocr-bwctd7d9d0gvgveu.canadacentral-01.azurewebsites.net/ocr', {
+          const response = await axios.post('https://ocrappnwrsup-bwhhbsenaeb8gqdm.canadacentral-01.azurewebsites.net/ocr', {
             pdfBase64: file
           });
           extractedText = response.data.text;
