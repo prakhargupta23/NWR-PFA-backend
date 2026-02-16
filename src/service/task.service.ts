@@ -48,5 +48,6 @@ export async function getTaskData() {
     } catch (error) {
         console.error("Error in getTaskData:", error);
         throw error;
+
     }
 }
