@@ -1,20 +1,8 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize";
 
-export class Task extends Model {
-    public uuid!: string;
-    public createdby!: string;
-    public status!: string;
-    public taskheading!: string;
-    public content!: string;
-    public segment!: string;
-    public division!: string;
-    public type!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-}
-
-Task.init(
+export const Task = sequelize.define(
+    "Task",
     {
         uuid: {
             type: DataTypes.UUID,
@@ -52,7 +40,6 @@ Task.init(
         },
     },
     {
-        sequelize,
         tableName: "Tasks",
         timestamps: true,
     }
