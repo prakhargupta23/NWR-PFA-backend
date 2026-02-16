@@ -2,6 +2,7 @@ import { AzureFunction, Context, HttpRequest } from "@azure/functions";
 import { getTaskData } from "../src/service/task.service";
 
 
+
 const httpTrigger: AzureFunction = async function (
   context: Context,
   req: HttpRequest
@@ -21,6 +22,7 @@ const httpTrigger: AzureFunction = async function (
       body: { success: false, message: `Error: ${error.message}` },
     };
   }
+
 };
 
 export default httpTrigger;
