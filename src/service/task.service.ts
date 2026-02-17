@@ -8,13 +8,21 @@ export async function taskDataInsert(taskData: any) {
 
         const newTask = await Task.create(
             {
-                createdby: taskData.createdby || taskData.createdBy,
-                status: taskData.status,
-                taskheading: taskData.taskheading || taskData.taskHeading,
-                content: taskData.content,
-                segment: taskData.segment,
-                division: taskData.division,
-                type: taskData.type,
+                uuid: taskData.uuid ?? undefined,
+                taskId: taskData.taskId ?? null,
+                msgId: taskData.msgId ?? null,
+            
+                createdby: taskData.createdby ?? taskData.createdBy ?? null,
+                assignedTo: taskData.assignedTo ?? taskData.assignedto ?? null,
+            
+                status: taskData.status ?? "Pending",
+            
+                taskheading: taskData.taskheading ?? taskData.taskHeading ?? null,
+            
+                content: taskData.content ?? null,
+                segment: taskData.segment ?? null,
+                division: taskData.division ?? null,
+                type: taskData.type ?? null
             },
             { transaction }
         );

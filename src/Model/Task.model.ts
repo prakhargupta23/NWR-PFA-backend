@@ -3,7 +3,10 @@ import sequelize from "../config/sequelize";
 
 export class Task extends Model {
     public uuid!: string;
+    public taskId!: string;
+    public msgId!: string;
     public createdby!: string;
+    public assignedTo!: string;
     public status!: string;
     public taskheading!: string;
     public content!: string;
@@ -31,6 +34,18 @@ Task.init(
             allowNull: true,
         },
         taskheading: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        taskId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        msgId: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        assignedTo: {
             type: DataTypes.STRING,
             allowNull: true,
         },
