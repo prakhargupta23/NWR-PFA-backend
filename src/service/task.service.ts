@@ -11,14 +11,14 @@ export async function taskDataInsert(taskData: any) {
                 uuid: taskData.uuid ?? undefined,
                 taskId: taskData.taskId ?? null,
                 msgId: taskData.msgId ?? null,
-            
+
                 createdby: taskData.createdby ?? taskData.createdBy ?? null,
                 assignedTo: taskData.assignedTo ?? taskData.assignedto ?? null,
-            
+
                 status: taskData.status ?? "Pending",
-            
+
                 taskheading: taskData.taskheading ?? taskData.taskHeading ?? null,
-            
+
                 content: taskData.content ?? null,
                 segment: taskData.segment ?? null,
                 division: taskData.division ?? null,
@@ -58,3 +58,40 @@ export async function getTaskData() {
         throw error;
     }
 }
+
+
+export async function updateTask(taskId: string) {
+    const transaction = await sequelize.transaction();
+    try {
+        const task = await Task.findOne({
+            where: { taskId },
+            transaction,
+        });
+
+        if (!task) {
+            await transaction.rollback();
+            return {
+                success: false,
+                message: "Task not found",
+            };
+        }
+
+        task.status = "Completed";
+        await task.save({ transaction });
+
+        await transaction.commit();
+
+        return {
+            success: true,
+            message: "Task updated successfully",
+            data: task,
+        };
+    } catch (error) {
+        await transaction.rollback();
+        console.error("Error in updateTask:", error);
+        throw error;
+    }
+}
+
+
+
