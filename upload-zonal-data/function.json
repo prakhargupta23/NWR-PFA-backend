@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "bindings": [
     {
       "authLevel": "anonymous",
@@ -17,3 +18,23 @@
   ],
   "scriptFile": "../dist/upload-zonal-data/index.js"
 }
+=======
+    "bindings": [
+        {
+            "authLevel": "anonymous",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": [
+                "post"
+            ]
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res"
+        }
+    ],
+    "scriptFile": "../dist/upload-zonal-data/index.js"
+}
+>>>>>>> 2aa15caa9579f97ee89f8612fe892440df1e8622
