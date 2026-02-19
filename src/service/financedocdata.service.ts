@@ -29,7 +29,13 @@ export async function getfiledata(prompt: string, file: string) {
               The document given to you will be the extracted text using ocr and might not be properly structured but the keep the values same and process accordingly(consider ] as a distinction between columns if it is in a table row)
               Document:
               ${extractedText}`;
-        return await getGpt4oResponse(jsonPrompt, {extractedText});
+        const gptResponse = await getGpt4oResponse(jsonPrompt, { extractedText });
+        
+
+
+return gptResponse;
+
+
     } catch (error) {
         console.error("Error in getfiledata:", error);
         throw error;

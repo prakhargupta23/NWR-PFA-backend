@@ -17,6 +17,9 @@ const clean = (value: any) => {
 };
 
 export async function insertZonalUploadData(payload: UploadPayload) {
+    console.log("raw payload receiving");
+    console.log(JSON.stringify(payload, null, 2));
+    console.log("ending ");
     const transaction = await sequelize.transaction();
 
     try {
@@ -52,6 +55,9 @@ export async function insertZonalUploadData(payload: UploadPayload) {
             actualforthemonthlastyearopenline: clean(row.actualforthemonthlastyearopenline),
             actualforthemonthlastyearconst: clean(row.actualforthemonthlastyearconst),
             actualforthemonthlastyeartotal: clean(row.actualforthemonthlastyeartotal),
+            actualuptothemonthopenline: clean(row.actualuptothemonthopenline),
+            actualuptothemonthconst: clean(row.actualuptothemonthconst),
+            actualuptothemonthtotal: clean(row.actualuptothemonthtotal),
             utilizationofopenline: clean(row.utilizationofopenline),
             utilizationofconst: clean(row.utilizationofconst),
             utilizationoftotal: clean(row.utilizationoftotal),
@@ -72,6 +78,9 @@ export async function insertZonalUploadData(payload: UploadPayload) {
             percentageutilization: clean(row.percentageutilization),
             selectedMonthYear: clean(payload.selectedMonthYear),
         }));
+        // console.log(" going to databse");
+        // console.log(JSON.stringify(zonalInsertPayload, null, 2));
+        // console.log(" ending here to database");
 
         if (zonalInsertPayload.length > 0) {
             await ZonalData.bulkCreate(zonalInsertPayload, {
