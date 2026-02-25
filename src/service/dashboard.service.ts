@@ -19,6 +19,11 @@ const toTwoDecimals = (value: unknown): number =>
 const normalizeLabel = (value: unknown): string =>
   String(value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
+const DIVISION_ORDER = ["JODHPUR", "BIKANER", "AJMER", "JAIPUR"] as const;
+
+const normalizeDivision = (value: unknown): string =>
+  String(value ?? "").trim().toUpperCase().replace(/\s+/g, " ");
+
 const isGrossEarningsRow = (row: any): boolean =>
   normalizeLabel(row?.category) === "grossearnings";
 
@@ -90,6 +95,35 @@ export async function getDashboardData(selectedMonthYear: string) {
       ? Number((((currentGrossTotal - previousGrossTotal) / previousGrossTotal) * 100).toFixed(2))
       : 0;
 
+  const unitRows = unitTotals.map((row: any) => {
+    const divisionName = normalizeDivision(row.au ?? row.auunder ?? row.division);
+    return {
+      divisionName,
+      value: toTwoDecimals(row.percentageutilization),
+    };
+  });
+
+  const valueByDivision = new Map<string, number>();
+  for (const row of unitRows) {
+    if (!row.divisionName) {
+      continue;
+    }
+    valueByDivision.set(row.divisionName, row.value);
+  }
+
+  const orderedKnownDivisions = DIVISION_ORDER.map((divisionName) => ({
+    auunder: divisionName,
+    value: valueByDivision.get(divisionName) ?? 0,
+  }));
+
+  const extraDivisions = Array.from(valueByDivision.entries())
+    .filter(([divisionName]) => !DIVISION_ORDER.includes(divisionName as any))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([divisionName, value]) => ({
+      auunder: divisionName,
+      value,
+    }));
+
   return {
     utilization: toTwoDecimals((zonalGrandTotal as any)?.utilizationoftotal),
     earningsGrowth,
@@ -103,9 +137,6 @@ export async function getDashboardData(selectedMonthYear: string) {
       sourceColumn: "actualToEndCurrentYear",
     },
 
-    graphData: unitTotals.map((row: any) => ({
-      auunder: row.auunder,   
-      value: toTwoDecimals(row.percentageutilization)
-    }))
+    graphData: [...orderedKnownDivisions, ...extraDivisions]
   };
 }
