@@ -13,7 +13,7 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   try {
-    
+
     const { username, password, portal } = req.body;
 
     // Store all credentials in an array
@@ -61,16 +61,22 @@ const httpTrigger: AzureFunction = async function (
         role: "division",
       },
       {
-        username: 'expenditure-admin',
-        password: 'Acghu0152',
-        portal: 'expenditure',
-        role: "mainAdmin",
+        username: 'CAPEX',
+        password: 'CAPEX',
+        portal: 'PFA',
+        role: "CAPEX",
       },
       {
-        username: 'workshop-admin',
-        password: 'Akj456',
+        username: 'OWE',
+        password: 'OWE',
         portal: 'PFA',
-        role: "workshop",
+        role: "OWE",
+      },
+      {
+        username: 'PFA',
+        password: 'PFA',
+        portal: 'PFA',
+        role: "PFA",
       },
     ];
 
@@ -80,8 +86,8 @@ const httpTrigger: AzureFunction = async function (
       (user) => user.username === username && user.password === password && user.portal === portal
     );
     console.log("Matched User:", matchedUser);
-    
-    
+
+
     console.log("Matched User:2", matchedUser);
 
     if (matchedUser) {
