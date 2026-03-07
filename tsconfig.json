@@ -8,6 +8,8 @@
     "strict": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   }
 }
