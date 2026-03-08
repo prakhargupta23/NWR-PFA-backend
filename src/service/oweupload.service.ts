@@ -172,31 +172,33 @@ export async function insertOweUploadData(payload: UploadPayload) {
         "No data provided. grossEarnings or workingExpenses is required."
       );
     }
-
+    console.log("earningsRows", earningsRows);
+    console.log("expenseRows", expenseRows);
+    console.log("Starting mapping")
     // Gross Earnings Mapping
     const earningsInsertPayload = earningsRows.map((row) => mapOweRow(row, payload));
 
     // Working Expenses Mapping
     const expensesInsertPayload = expenseRows.map((row) => mapOweRow(row, payload));
-
-    // 🔥 Optional: Delete Existing Month Data (Prevent Duplicate)
-    if (payload.selectedMonthYear && payload.division) {
+    console.log("mapping done")
+    if (payload.selectedMonthYear) {
+      const whereCondition: any = { selectedMonthYear: payload.selectedMonthYear };
+      if (payload.division) {
+        whereCondition.division = payload.division;
+      }
+      console.log("destroying last entries")
       await GrossEarnings.destroy({
-        where: {
-          division: payload.division,
-          selectedMonthYear: payload.selectedMonthYear,
-        },
+        where: whereCondition,
         transaction,
       });
 
       await WorkingExpenses.destroy({
-        where: {
-          division: payload.division,
-          selectedMonthYear: payload.selectedMonthYear,
-        },
+        where: whereCondition,
         transaction,
       });
     }
+    console.log("destroying done")
+    console.log("inserting earnings")
 
     // 🔹 Insert Earnings
     if (earningsInsertPayload.length > 0) {
@@ -205,6 +207,8 @@ export async function insertOweUploadData(payload: UploadPayload) {
         returning: false,
       });
     }
+    console.log("inserting earnings done")
+    console.log("inserting expenses")
 
     // 🔹 Insert Expenses
     if (expensesInsertPayload.length > 0) {
@@ -213,8 +217,10 @@ export async function insertOweUploadData(payload: UploadPayload) {
         returning: false,
       });
     }
-
+    console.log("inserting expenses done")
+    console.log("commiting transaction")
     await transaction.commit();
+    console.log("commiting done")
 
     return {
       success: true,

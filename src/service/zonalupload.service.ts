@@ -78,9 +78,14 @@ export async function insertZonalUploadData(payload: UploadPayload) {
             percentageutilization: clean(row.percentageutilization),
             selectedMonthYear: clean(payload.selectedMonthYear),
         }));
-        // console.log(" going to databse");
-        // console.log(JSON.stringify(zonalInsertPayload, null, 2));
-        // console.log(" ending here to database");
+        if (payload.selectedMonthYear) {
+            const whereCondition: any = { selectedMonthYear: payload.selectedMonthYear };
+            if (payload.division) {
+                whereCondition.division = payload.division;
+            }
+            await ZonalData.destroy({ where: whereCondition, transaction });
+            await UnitData.destroy({ where: whereCondition, transaction });
+        }
 
         if (zonalInsertPayload.length > 0) {
             await ZonalData.bulkCreate(zonalInsertPayload, {
