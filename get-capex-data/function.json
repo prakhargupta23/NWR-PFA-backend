@@ -15,5 +15,5 @@
             "name": "res"
         }
     ],
-    "scriptFile": "../dist/get-owe-data/index.js"
+    "scriptFile": "../dist/get-capex-data/index.js"
 }

@@ -1,14 +1,14 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { getLatestOweData } from "../src/service/owe.service";
+import { getLatestCapexData } from "../src/service/capex.service";
 
 const httpTrigger: AzureFunction = async function (
     context: Context,
     req: HttpRequest
 ): Promise<void> {
     try {
-        console.log("Get Owe data function reached");
+        console.log("Get Capex data function reached");
 
-        const data = await getLatestOweData();
+        const data = await getLatestCapexData();
 
         context.res = {
             status: 200,
@@ -19,7 +19,7 @@ const httpTrigger: AzureFunction = async function (
         };
 
     } catch (error) {
-        console.error("Error fetching Owe data:", error);
+        console.error("Error fetching Capex data:", error);
         context.res = {
             status: 500,
             body: {
@@ -31,4 +31,3 @@ const httpTrigger: AzureFunction = async function (
 };
 
 export default httpTrigger;
-
