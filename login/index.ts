@@ -78,6 +78,12 @@ const httpTrigger: AzureFunction = async function (
         portal: 'PFA',
         role: "PFA",
       },
+      {
+        username: 'AUDIT',
+        password: 'AUDIT',
+        portal: 'PFA',
+        role: "AUDIT",
+      },
     ];
 
     console.log(users);
