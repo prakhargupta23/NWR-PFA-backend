@@ -1,14 +1,14 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions";
-import { getLatestAuditData } from "../src/service/audit.service";
+import { getUniqueAuditMonths } from "../src/service/audit.service";
 
 const httpTrigger: AzureFunction = async function (
     context: Context,
     req: HttpRequest
 ): Promise<void> {
     try {
-        console.log("Get Audit data function reached");
+        console.log("Get Audit months function reached");
 
-        const months = await getLatestAuditData();
+        const months = await getUniqueAuditMonths();
 
         context.res = {
             status: 200,

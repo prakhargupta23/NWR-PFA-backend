@@ -22,3 +22,28 @@ export const getUniqueAuditMonths = async (): Promise<string[]> => {
 
     return months;
 };
+
+
+export const getLatestAuditData = async () => {
+    const AuditDataQuery = `
+        SELECT *
+        FROM AuditData
+        WHERE createdAt = (
+            SELECT MAX(createdAt)
+            FROM AuditData
+        );
+    `;
+
+    console.log("Fetching latest Audit data from AuditData...");
+
+    const AuditData = await sequelize.query(AuditDataQuery, { type: QueryTypes.SELECT });
+
+    const sortedAuditData = AuditData.sort((a, b) => a['index'] - b['index']);
+
+    console.log(`Fetched ${sortedAuditData.length} Audit records.`);
+
+    return {
+        sortedAuditData
+    };
+};
+
