@@ -26,3 +26,53 @@ export async function getUniqueGrossEarningsMonths(): Promise<string[]> {
 
     return months;
 }
+
+
+
+export const getLatestEarningsData = async () => {
+    const EarningsDataQuery = `
+        SELECT *
+        FROM GrossEarnings
+        WHERE createdAt = (
+            SELECT MAX(createdAt)
+            FROM GrossEarnings
+        );
+    `;
+
+    console.log("Fetching latest GrossEarnings data from GrossEarnings...");
+
+    const EarningsData = await sequelize.query(EarningsDataQuery, { type: QueryTypes.SELECT });
+
+    const sortedEarningsData = EarningsData.sort((a, b) => a['sno'] - b['sno']);
+
+    console.log(`Fetched ${sortedEarningsData.length} GrossEarnings records.`);
+
+    return {
+        sortedEarningsData
+    };
+};
+
+
+
+export const getLatestWorkingExpensesData = async () => {
+    const WorkingExpensesDataQuery = `
+        SELECT *
+        FROM WorkingExpenses
+        WHERE createdAt = (
+            SELECT MAX(createdAt)
+            FROM WorkingExpenses
+        );
+    `;
+
+    console.log("Fetching latest WorkingExpenses data from WorkingExpenses...");
+
+    const WorkingExpensesData = await sequelize.query(WorkingExpensesDataQuery, { type: QueryTypes.SELECT });
+
+    const sortedWorkingExpensesData = WorkingExpensesData.sort((a, b) => a['sno'] - b['sno']);
+
+    console.log(`Fetched ${sortedWorkingExpensesData.length} WorkingExpenses records.`);
+
+    return {
+        sortedWorkingExpensesData
+    };
+};

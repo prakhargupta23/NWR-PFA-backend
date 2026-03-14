@@ -13,6 +13,7 @@ export const AuditData = sequelize.define(
         division: { type: DataTypes.STRING, allowNull: true },
         date: { type: DataTypes.STRING, allowNull: true },
         figure: { type: DataTypes.STRING, allowNull: true },
+
         index: { type: DataTypes.STRING, allowNull: true },
         unit: { type: DataTypes.STRING, allowNull: true },
         typeOfAuditObj: { type: DataTypes.STRING, allowNull: true },
