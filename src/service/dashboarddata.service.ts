@@ -10,7 +10,7 @@ export const getDashboardData = async () => {
     console.log("Dashboard data function reached");
     const capexData = await getLatestCapexData();
     const capex = filterCapexData(capexData);
-    console.log("capex", capex);
+    console.log("capex data", capex);
 
     const auditData = await getLatestAuditData();
     const audit = filterAuditData(auditData);
@@ -26,7 +26,7 @@ export const getDashboardData = async () => {
     // Prepare graphData from unitData
     const unitData: any[] = capexData?.unitData || [];
     const graphData = DIVISION_ORDER.map(divName => {
-        const row = unitData.find((r: any) => 
+        const row = unitData.find((r: any) =>
             (r.au || r.auunder || r.division || "").toUpperCase().includes(divName)
         );
         return {
@@ -38,6 +38,8 @@ export const getDashboardData = async () => {
     console.log("Earnings", Earnings);
     console.log("workingExpenses", workingExpenses);
     console.log("operatingRatio", operatingRatio);
+    console.log("capex", capex);
+    console.log("audit", audit);
 
     return {
         operatingRatio,
@@ -52,16 +54,18 @@ export const getDashboardData = async () => {
 
 function filterAuditData(auditData: any) {
     const data = auditData?.sortedAuditData || [];
-    const filteredrow = data.find((row: any) => row.category === "Total");
+    const filteredrow = data.find((row: any) => row.typeOfAuditObj === "Total");
     console.log("filteredrow audit", filteredrow);
-    return filteredrow?.percentVariationBP || null;
+    return filteredrow?.total || null;
 }
 
 function filterCapexData(capexData: any) {
+    //console.log("capex data filter", capexData);
     const data = capexData?.zonalData || [];
+    console.log("capex data filter", data);
     const filteredrow = data.find((row: any) => row.planheadname === "Grand Total");
     console.log("filteredrow capex", filteredrow);
-    return filteredrow?.total || null;
+    return filteredrow?.utilizationoftotal || null;
 }
 
 function filterEarningsData(earningsData: any) {
@@ -72,15 +76,16 @@ function filterEarningsData(earningsData: any) {
 }
 
 function filterWorkingExpenses(workingExpensesData: any) {
+    // console.log("working expenses data filter", workingExpensesData);
     const data = workingExpensesData?.sortedWorkingExpensesData || [];
     console.log("working expenses data filter");
-    const grossEarningsRow = data.find((row: any) => row.category === "Total");
-    return grossEarningsRow ? grossEarningsRow.percentVariationBP : null;
+    const grossEarningsRow = data.find((row: any) => row.category === "TOTAL  OWE");
+    return grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null;
 }
 
 function filterOperatingRatio(workingExpensesData: any) {
     const data = workingExpensesData?.sortedWorkingExpensesData || [];
     console.log("operating ratio data filter");
-    const grossEarningsRow = data.find((row: any) => row.category === "Operating Ratio");
-    return grossEarningsRow ? grossEarningsRow.actualToEndLastYear : null;
+    const grossEarningsRow = data.find((row: any) => row.category === "OPERATING RATIO (%)(Exclud.Susp.)");
+    return grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null;
 }
