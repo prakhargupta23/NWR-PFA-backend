@@ -1,7 +1,7 @@
 import { getLatestCapexData } from "./capex.service";
 import { getLatestAuditData } from "./audit.service";
 import { getLatestOweData } from "./owe.service";
-import { getLatestEarningsData, getLatestWorkingExpensesData } from "./grossEarningsMonths.service";
+import { getLatestEarningsData, getLatestWorkingExpensesData, getOperatingRatioLast6Months } from "./grossEarningsMonths.service";
 
 
 const DIVISION_ORDER = ["JODHPUR", "BIKANER", "AJMER", "JAIPUR"];
@@ -24,16 +24,18 @@ export const getDashboardData = async () => {
     const Earnings = filterEarningsData(earningsData);
 
     // Prepare graphData from unitData
-    const unitData: any[] = capexData?.unitData || [];
-    const graphData = DIVISION_ORDER.map(divName => {
-        const row = unitData.find((r: any) =>
-            (r.au || r.auunder || r.division || "").toUpperCase().includes(divName)
-        );
-        return {
-            name: divName,
-            value: row ? (Number(row.percentageutilization) || 0) : 0
-        };
-    });
+    // const unitData: any[] = capexData?.unitData || [];
+    // const graphData = DIVISION_ORDER.map(divName => {
+    //     const row = unitData.find((r: any) =>
+    //         (r.au || r.auunder || r.division || "").toUpperCase().includes(divName)
+    //     );
+    //     return {
+    //         name: divName,
+    //         value: row ? (Number(row.percentageutilization) || 0) : 0
+    //     };
+    // });
+
+    const graphData = await getOperatingRatioLast6Months();
 
     console.log("Earnings", Earnings);
     console.log("workingExpenses", workingExpenses);
