@@ -3,21 +3,23 @@ import { QueryTypes } from "sequelize";
 
 export const getLatestCapexData = async () => {
     const zonalQuery = `
-        SELECT *
-        FROM ZonalData
-        WHERE createdAt = (
-            SELECT MAX(createdAt)
-            FROM ZonalData
-        );
+   SELECT *
+FROM ZonalData
+WHERE selectedMonthYear = (
+    SELECT TOP 1 selectedMonthYear
+    FROM ZonalData
+    ORDER BY TRY_CONVERT(DATE, '01/' + selectedMonthYear, 103) DESC
+);
     `;
 
     const unitQuery = `
         SELECT *
-        FROM UnitData
-        WHERE createdAt = (
-            SELECT MAX(createdAt)
-            FROM UnitData
-        );
+FROM UnitData
+WHERE selectedMonthYear = (
+    SELECT TOP 1 selectedMonthYear
+    FROM UnitData
+    ORDER BY TRY_CONVERT(DATE, '01/' + selectedMonthYear, 103) DESC
+);
     `;
 
     console.log("Fetching latest Capex data...");

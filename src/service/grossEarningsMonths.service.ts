@@ -67,6 +67,8 @@ export const getLatestWorkingExpensesData = async () => {
     console.log("Fetching latest WorkingExpenses data from WorkingExpenses...");
 
     const WorkingExpensesData = await sequelize.query(WorkingExpensesDataQuery, { type: QueryTypes.SELECT });
+    console.log(`WorkingExpensesData: ${WorkingExpensesData.length} rows fetched`);
+    console.log("WorkingExpensesData categories:", WorkingExpensesData.map((r: any) => r.category));
 
     const sortedWorkingExpensesData = WorkingExpensesData.sort((a, b) => a['sno'] - b['sno']);
 
@@ -90,7 +92,7 @@ export const getOperatingRatioLast6Months = async () => {
 
     // Group by selectedMonthYear, keeping the most recently created record for each month
     const latestPerMonth = new Map<string, any>();
-    
+
     for (const row of data) {
         if (!row.selectedMonthYear) continue;
         const currentLatest = latestPerMonth.get(row.selectedMonthYear);
@@ -115,12 +117,12 @@ export const getOperatingRatioLast6Months = async () => {
 
     // Optionally reverse it to chronological order (oldest to newest)
     last6MonthsData.sort((a, b) => {
-         const toNum = (val: string): number => {
-             if (!val) return 0;
-             const [mm, yyyy] = val.split("/");
-             return Number(yyyy) * 100 + Number(mm);
-         };
-         return toNum(a.selectedMonthYear) - toNum(b.selectedMonthYear);
+        const toNum = (val: string): number => {
+            if (!val) return 0;
+            const [mm, yyyy] = val.split("/");
+            return Number(yyyy) * 100 + Number(mm);
+        };
+        return toNum(a.selectedMonthYear) - toNum(b.selectedMonthYear);
     });
 
     console.log(`Fetched ${last6MonthsData.length} operating ratio records for the last 6 months.`);
