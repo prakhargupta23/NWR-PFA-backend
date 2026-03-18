@@ -27,7 +27,11 @@ const httpTrigger: AzureFunction = async function (
 
         console.log("blob function reached 2");
 
-        const filename = `${docname}_${date}.xlsx`;
+
+        let filename = `${docname}_${date}.xlsx`;
+        if (date == "xxxxx") {
+            filename = `${docname}`;
+        }
 
         console.log("blob function reached 3");
 

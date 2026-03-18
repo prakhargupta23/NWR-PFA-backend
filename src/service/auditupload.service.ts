@@ -1,5 +1,6 @@
 import sequelize from "../config/sequelize";
 import AuditData from "../Model/AuditData.model";
+import axios from "axios";
 
 type UploadPayload = {
     auditdata?: Record<string, any>[];
@@ -23,8 +24,8 @@ export async function insertAuditUploadData(payload: UploadPayload) {
         await AuditData.sync();
 
         const auditRows = Array.isArray(payload.auditdata) ? payload.auditdata : [];
-        const summaryRows = Array.isArray(payload.auditsummary) ? payload.auditsummary : [];
-
+        // const summaryRows = Array.isArray(payload.auditsummary) ? payload.auditsummary : [];
+        console.log("Audit rows", auditRows);
         const cleanedSelectedMonthYear = clean(payload.selectedMonthYear);
 
         const auditInsertPayload = auditRows.map((row) => ({
@@ -59,8 +60,30 @@ export async function insertAuditUploadData(payload: UploadPayload) {
                 returning: false,
             });
         }
-
+        console.log("Audit data inserted successfully");
         await transaction.commit();
+        console.log("Transaction committed");
+        if (cleanedSelectedMonthYear) {
+            console.log("Generating summary");
+            const summaryinsertionresponse = await axios.post(
+                "http://127.0.0.1:5000/generate-summary",
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: {
+                        "date": cleanedSelectedMonthYear,
+                        "param": "audit",
+                    },
+                }
+            );
+            console.log("Summary insertion response", summaryinsertionresponse);
+
+            if (!summaryinsertionresponse.data.success) {
+                throw new Error(summaryinsertionresponse.data.message);
+            }
+        }
+        console.log("Summary insertion response");
 
         return {
             success: true,

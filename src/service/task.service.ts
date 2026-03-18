@@ -129,4 +129,54 @@ export async function updateSummary(taskData: any) {
 }
 
 
+export async function getLatestSummariesByTypes() {
+    try {
+        const summaries = await Summary.findAll({
+            where: {
+                type: ["capex", "owe", "audit"]
+            },
+            raw: true
+        });
+
+        const latestPerType: any = {};
+        
+        const toNum = (val: string): number => {
+            if (!val || !val.includes("/")) return 0;
+            const parts = val.split("/");
+            if (parts.length !== 2) return 0;
+            const [mm, yyyy] = parts;
+            return Number(yyyy) * 100 + Number(mm);
+        };
+
+        summaries.forEach((s: any) => {
+            const currentLatest = latestPerType[s.type];
+            if (!currentLatest) {
+                latestPerType[s.type] = s;
+                return;
+            }
+            
+            const sDateVal = toNum(s.date);
+            const currentLatestDateVal = toNum(currentLatest.date);
+
+            if (sDateVal > currentLatestDateVal) {
+                latestPerType[s.type] = s;
+            } else if (sDateVal === currentLatestDateVal) {
+                if (new Date(s.createdAt) > new Date(currentLatest.createdAt)) {
+                    latestPerType[s.type] = s;
+                }
+            }
+        });
+
+        return {
+            success: true,
+            message: "Latest summaries retrieved successfully",
+            data: latestPerType
+        };
+    } catch (error) {
+        console.error("Error in getLatestSummariesByTypes:", error);
+        throw error;
+    }
+}
+
+
 

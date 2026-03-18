@@ -21,7 +21,7 @@ export async function insertZonalUploadData(payload: UploadPayload) {
     console.log(JSON.stringify(payload, null, 2));
     console.log("ending ");
     const transaction = await sequelize.transaction();
-
+    console.log("transaction");
     try {
         await ZonalData.sync();
         await UnitData.sync();
@@ -32,7 +32,7 @@ export async function insertZonalUploadData(payload: UploadPayload) {
         if (zonalRows.length === 0 && unitRows.length === 0) {
             throw new Error("No data provided. zonaldata or unitdata is required.");
         }
-
+        console.log("zonalRows", zonalRows[0]);
         const zonalInsertPayload = zonalRows.map((row) => ({
             division: clean(row.division ?? payload.division),
             date: clean(row.date),
@@ -63,6 +63,7 @@ export async function insertZonalUploadData(payload: UploadPayload) {
             utilizationoftotal: clean(row.utilizationoftotal),
             selectedMonthYear: clean(payload.selectedMonthYear),
         }));
+        console.log("zonalInsertPayload", zonalInsertPayload[0]);
 
         const unitInsertPayload = unitRows.map((row) => ({
             division: clean(row.division ?? payload.division),
@@ -78,6 +79,7 @@ export async function insertZonalUploadData(payload: UploadPayload) {
             percentageutilization: clean(row.percentageutilization),
             selectedMonthYear: clean(payload.selectedMonthYear),
         }));
+        console.log("unitInsertPayload", unitInsertPayload[0]);
         if (payload.selectedMonthYear) {
             const whereCondition: any = { selectedMonthYear: payload.selectedMonthYear };
             if (payload.division) {
