@@ -33,9 +33,10 @@ export const getLatestEarningsData = async () => {
     const EarningsDataQuery = `
         SELECT *
         FROM GrossEarnings
-        WHERE createdAt = (
-            SELECT MAX(createdAt)
+        WHERE selectedMonthYear = (
+            SELECT TOP 1 selectedMonthYear
             FROM GrossEarnings
+            ORDER BY TRY_CONVERT(DATE, '01/' + selectedMonthYear, 103) DESC
         );
     `;
 
@@ -58,9 +59,10 @@ export const getLatestWorkingExpensesData = async () => {
     const WorkingExpensesDataQuery = `
         SELECT *
         FROM WorkingExpenses
-        WHERE createdAt = (
-            SELECT MAX(createdAt)
+        WHERE selectedMonthYear = (
+            SELECT TOP 1 selectedMonthYear
             FROM WorkingExpenses
+            ORDER BY TRY_CONVERT(DATE, '01/' + selectedMonthYear, 103) DESC
         );
     `;
 

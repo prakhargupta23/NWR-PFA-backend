@@ -76,7 +76,10 @@ function filterEarningsData(earningsData: any) {
     console.log("earnings data filter");
     const grossEarningsRow = data.find((row: any) => row.category === "Gross Earnings");
     console.log("grossEarningsRow", grossEarningsRow);
-    return grossEarningsRow ? grossEarningsRow.percentVariationBP : null;
+    return {
+        percentvariationBP: grossEarningsRow ? grossEarningsRow.percentVariationBP : null,
+        actualToEndCurrentYear: grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null
+    };
 }
 
 function filterWorkingExpenses(workingExpensesData: any) {
