@@ -5,9 +5,10 @@ export const getLatestOweData = async () => {
     const oweQuery = `
         SELECT *
         FROM WorkingExpenses
-        WHERE createdAt = (
-            SELECT MAX(createdAt)
+        WHERE selectedMonthYear = (
+            SELECT TOP 1 selectedMonthYear
             FROM WorkingExpenses
+            ORDER BY TRY_CONVERT(DATE, '01/' + selectedMonthYear, 103) DESC
         );
     `;
 

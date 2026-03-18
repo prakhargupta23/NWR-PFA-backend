@@ -17,6 +17,7 @@ export const getDashboardData = async () => {
     console.log("audit", audit);
 
     const workingExpensesData = await getLatestWorkingExpensesData();
+    console.log("ffffffffffffffff", workingExpensesData);
     const workingExpenses = filterWorkingExpenses(workingExpensesData);
     const operatingRatio = filterOperatingRatio(workingExpensesData);
 
@@ -74,7 +75,11 @@ function filterEarningsData(earningsData: any) {
     const data = earningsData?.sortedEarningsData || [];
     console.log("earnings data filter");
     const grossEarningsRow = data.find((row: any) => row.category === "Gross Earnings");
-    return grossEarningsRow ? grossEarningsRow.percentVariationBP : null;
+    console.log("grossEarningsRow", grossEarningsRow);
+    return {
+        percentvariationBP: grossEarningsRow ? grossEarningsRow.percentVariationBP : null,
+        actualToEndCurrentYear: grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null
+    };
 }
 
 function filterWorkingExpenses(workingExpensesData: any) {
@@ -87,7 +92,8 @@ function filterWorkingExpenses(workingExpensesData: any) {
 
 function filterOperatingRatio(workingExpensesData: any) {
     const data = workingExpensesData?.sortedWorkingExpensesData || [];
-    console.log("operating ratio data filter");
-    const grossEarningsRow = data.find((row: any) => row.category === "OPERATING RATIO (%)(Exclud.Susp.)");
-    return grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null;
+    console.log("operating ratio data filter", data);
+    const operatingRatio = data.find((row: any) => row.category === "OPERATING RATIO (%)(Exclud.Susp.)");
+    console.log("operating ratio", operatingRatio);
+    return operatingRatio ? operatingRatio.actualToEndCurrentYear : null;
 }

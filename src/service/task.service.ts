@@ -1,15 +1,17 @@
+import { randomUUID } from "crypto";
 import Task from "../Model/Task.model";
 import sequelize from "../config/sequelize";
+import Summary from "../Model/Summary";
 
 export async function taskDataInsert(taskData: any) {
     const transaction = await sequelize.transaction();
     try {
         await Task.sync({ alter: true });
-
+        console.log("taskData", taskData);
         const newTask = await Task.create(
             {
-                uuid: taskData.uuid ?? undefined,
-                taskId: taskData.taskId ?? null,
+                uuid: taskData.uuid ?? randomUUID(),
+                taskId: taskData.taskID ?? null,
                 msgId: taskData.msgId ?? null,
 
                 createdby: taskData.createdby ?? taskData.createdBy ?? null,
@@ -26,6 +28,7 @@ export async function taskDataInsert(taskData: any) {
             },
             { transaction }
         );
+        console.log("newTask", newTask);
 
         await transaction.commit();
 
@@ -90,6 +93,37 @@ export async function updateTask(taskId: string) {
     } catch (error) {
         await transaction.rollback();
         console.error("Error in updateTask:", error);
+        throw error;
+    }
+}
+
+
+export async function updateSummary(taskData: any) {
+    const transaction = await sequelize.transaction();
+    try {
+        await Summary.sync({ alter: true });
+        console.log("taskData", taskData);
+        const newSummary = await Summary.create(
+            {
+                uuid: taskData.uuid ?? randomUUID(),
+                content: taskData.content ?? null,
+                type: taskData.type ?? null,
+                date: taskData.date ?? null
+            },
+            { transaction }
+        );
+        console.log("summary", newSummary);
+
+        await transaction.commit();
+
+        return {
+            success: true,
+            message: "Summary saved successfully",
+            data: newSummary,
+        };
+    } catch (error) {
+        await transaction.rollback();
+        console.error("Error in summary:", error);
         throw error;
     }
 }
