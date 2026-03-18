@@ -12,7 +12,7 @@ const httpTrigger: AzureFunction = async function (
 
         const [docname, date, base64] = req.body;
 
-        console.log("blob function reached 1", docname, date);
+        console.log("blob function reached 1", docname, date, base64[0]);
 
         if (!docname || !date || !base64) {
             context.res = {
@@ -28,9 +28,19 @@ const httpTrigger: AzureFunction = async function (
         console.log("blob function reached 2");
 
 
-        let filename = `${docname}_${date}.xlsx`;
-        if (date == "xxxxx") {
-            filename = `${docname}`;
+        let filename = "";
+        if (date == "pdf") {
+            filename = `${docname}.pdf`;
+        } else if (date == "xlsx" || date == "xlxx") {
+            filename = `${docname}.xlsx`;
+        } else if (date == "csv") {
+            filename = `${docname}.csv`;
+        } else if (date == "png") {
+            filename = `${docname}.png`;
+        } else if (date == "jpg") {
+            filename = `${docname}.jpg`;
+        } else {
+            filename = `${docname}_${date}.xlsx`;
         }
 
         console.log("blob function reached 3");

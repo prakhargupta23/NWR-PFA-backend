@@ -13,6 +13,7 @@ export class Task extends Model {
     public segment!: string;
     public division!: string;
     public type!: string;
+    public url!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -62,6 +63,10 @@ Task.init(
             allowNull: true,
         },
         type: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        url: {
             type: DataTypes.STRING,
             allowNull: true,
         },

@@ -11,7 +11,7 @@ export async function taskDataInsert(taskData: any) {
         const newTask = await Task.create(
             {
                 uuid: taskData.uuid ?? randomUUID(),
-                taskId: taskData.taskID ?? null,
+                taskId: taskData.taskId ?? null,
                 msgId: taskData.msgId ?? null,
 
                 createdby: taskData.createdby ?? taskData.createdBy ?? null,
@@ -44,6 +44,7 @@ export async function taskDataInsert(taskData: any) {
     }
 }
 
+
 export async function getTaskData() {
     try {
         const tasks = await Task.findAll({
@@ -64,7 +65,7 @@ export async function getTaskData() {
 }
 
 
-export async function updateTask(taskId: string) {
+export async function updateTask(taskId: string, url: string) {
     const transaction = await sequelize.transaction();
     try {
         const task = await Task.findOne({
@@ -81,6 +82,7 @@ export async function updateTask(taskId: string) {
         }
 
         task.status = "Completed";
+        task.url = url;
         await task.save({ transaction });
 
         await transaction.commit();
@@ -101,7 +103,6 @@ export async function updateTask(taskId: string) {
 export async function updateSummary(taskData: any) {
     const transaction = await sequelize.transaction();
     try {
-        await Summary.sync({ alter: true });
         console.log("taskData", taskData);
         const newSummary = await Summary.create(
             {
@@ -139,7 +140,7 @@ export async function getLatestSummariesByTypes() {
         });
 
         const latestPerType: any = {};
-        
+
         const toNum = (val: string): number => {
             if (!val || !val.includes("/")) return 0;
             const parts = val.split("/");
@@ -154,7 +155,7 @@ export async function getLatestSummariesByTypes() {
                 latestPerType[s.type] = s;
                 return;
             }
-            
+
             const sDateVal = toNum(s.date);
             const currentLatestDateVal = toNum(currentLatest.date);
 

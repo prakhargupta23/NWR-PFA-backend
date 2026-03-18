@@ -8,7 +8,7 @@ const httpTrigger: AzureFunction = async function (
   req: HttpRequest
 ): Promise<void> {
   try {
-
+    console.log("create task reached", req.body);
     const result = await taskDataInsert(req.body);
     context.res = {
       status: 200,
