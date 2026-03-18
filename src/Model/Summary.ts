@@ -13,7 +13,7 @@ export const Summary = sequelize.define(
 
         type: { type: DataTypes.STRING, allowNull: true },
         date: { type: DataTypes.STRING, allowNull: true },
-        content: { type: DataTypes.STRING, allowNull: true },
+        content: { type: DataTypes.TEXT, allowNull: true }
 
     },
     {

@@ -6,10 +6,15 @@ const httpTrigger: AzureFunction = async function (
     req: HttpRequest
 ): Promise<void> {
     try {
+        console.log("Update summary data function triggered");
         // const taskId = req.query. || (req.body && req.body.taskId);
         const summary = req.query.summary || (req.body && req.body.summary);
         const param = req.query.param || (req.body && req.body.param);
         const date = req.query.date || (req.body && req.body.date);
+
+        console.log("Summary", summary);
+        console.log("Param", param);
+        console.log("Date", date);
 
         if (!summary && !param && !date) {
             context.res = {
