@@ -11,6 +11,8 @@ const httpTrigger: AzureFunction = async function (
 
         const doctype = req.query.doctype || (req.body && req.body.doctype);
         const date = req.query.date || (req.body && req.body.date);
+        const file = req.query.file || (req.body && req.body.file);
+        const type = req.query.type || (req.body && req.body.type);
 
         console.log("Request details:", { doctype, date });
 
@@ -25,8 +27,13 @@ const httpTrigger: AzureFunction = async function (
             return;
         }
 
-        const filename = `${doctype}_${date}.xlsx`;
-        
+        let filename;
+        if (type === "file") {
+            filename = `${date}`;
+        } else {
+            filename = `${doctype}_${date}.xlsx`;
+        }
+
         const buffer = await getFileFromBlob(filename);
 
         context.res = {

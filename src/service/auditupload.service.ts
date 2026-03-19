@@ -66,7 +66,7 @@ export async function insertAuditUploadData(payload: UploadPayload) {
         if (cleanedSelectedMonthYear) {
             console.log("Generating summary");
             const summaryinsertionresponse = await axios.post(
-                "http://127.0.0.1:5000/generate-summary",
+                "https://nwr-whatsapp-api-bqfadsfzc2ergzcx.canadacentral-01.azurewebsites.net/generate-summary",
                 {
                     headers: {
                         "Content-Type": "application/json",
