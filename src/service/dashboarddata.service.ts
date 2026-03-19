@@ -59,7 +59,7 @@ function filterAuditData(auditData: any) {
     const data = auditData?.sortedAuditData || [];
     const filteredrow = data.find((row: any) => row.typeOfAuditObj === "Total");
     console.log("filteredrow audit", filteredrow);
-    return filteredrow?.total || null;
+    return `${filteredrow?.total}` || null;
 }
 
 function filterCapexData(capexData: any) {
@@ -68,7 +68,10 @@ function filterCapexData(capexData: any) {
     console.log("capex data filter", data);
     const filteredrow = data.find((row: any) => row.planheadname === "Grand Total");
     console.log("filteredrow capex", filteredrow);
-    return filteredrow?.utilizationoftotal || null;
+    return {
+        utilizationoftotal: filteredrow?.utilizationoftotal,
+        actualuptothemonthtotal: filteredrow?.actualuptothemonthtotal
+    };
 }
 
 function filterEarningsData(earningsData: any) {
@@ -78,7 +81,7 @@ function filterEarningsData(earningsData: any) {
     console.log("grossEarningsRow", grossEarningsRow);
     return {
         percentvariationBP: grossEarningsRow ? grossEarningsRow.percentVariationBP : null,
-        actualToEndCurrentYear: grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null
+        actualToEndCurrentYear: grossEarningsRow?.actualToEndCurrentYear
     };
 }
 
@@ -87,7 +90,7 @@ function filterWorkingExpenses(workingExpensesData: any) {
     const data = workingExpensesData?.sortedWorkingExpensesData || [];
     console.log("working expenses data filter");
     const grossEarningsRow = data.find((row: any) => row.category === "TOTAL  OWE");
-    return grossEarningsRow ? grossEarningsRow.actualToEndCurrentYear : null;
+    return grossEarningsRow?.actualToEndCurrentYear;
 }
 
 function filterOperatingRatio(workingExpensesData: any) {
@@ -95,5 +98,8 @@ function filterOperatingRatio(workingExpensesData: any) {
     console.log("operating ratio data filter", data);
     const operatingRatio = data.find((row: any) => row.category === "OPERATING RATIO (%)(Exclud.Susp.)");
     console.log("operating ratio", operatingRatio);
-    return operatingRatio ? operatingRatio.actualToEndCurrentYear : null;
+    const operatingratio = operatingRatio ? operatingRatio.actualToEndCurrentYear : 0;
+    const no = parseFloat(operatingratio) * 100;
+    console.log("operating ratio number", no, typeof no);
+    return no;
 }

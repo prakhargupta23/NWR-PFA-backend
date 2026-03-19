@@ -36,8 +36,9 @@ export const uploadFileToBlob = async (
 };
 
 export const getFileFromBlob = async (fileName: string) => {
+    console.log("fetching file from blob with fileName", fileName);
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-    
+
     console.log("🚀 Download started");
     console.log("File:", fileName);
 
@@ -47,4 +48,4 @@ export const getFileFromBlob = async (fileName: string) => {
     console.log("Size:", buffer.length, "bytes");
 
     return buffer;
-};
+};
