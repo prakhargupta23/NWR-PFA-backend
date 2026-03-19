@@ -6,8 +6,10 @@ const httpTrigger: AzureFunction = async function (
     req: HttpRequest
 ): Promise<void> {
     try {
+        console.log("update task reached");
         const taskId = req.query.taskId || (req.body && req.body.taskId);
-
+        const url = req.query.url || (req.body && req.body.url) || "";
+        console.log("update task reached finally", taskId, url);
         if (!taskId) {
             context.res = {
                 status: 400,
@@ -16,7 +18,7 @@ const httpTrigger: AzureFunction = async function (
             return;
         }
 
-        const result = await updateTask(taskId);
+        const result = await updateTask(taskId, url);
         context.res = {
             status: result.success ? 200 : 404,
             body: result,

@@ -10,21 +10,28 @@ type UploadPayload = {
 };
 
 const clean = (value: any) => {
-    if (value === undefined) {
+    if (value === undefined || value === null) {
         return null;
     }
-    return value;
+    return value.toString();
 };
 
 export async function insertZonalUploadData(payload: UploadPayload) {
     console.log("raw payload receiving");
-    console.log(JSON.stringify(payload, null, 2));
+    // console.log(JSON.stringify(payload, null, 2)); // Often too large for logs
     console.log("ending ");
+
+    // Sync optionally here, BEFORE transaction, but better to skip if already synced
+    // await ZonalData.sync();
+    // await UnitData.sync();
+
     const transaction = await sequelize.transaction();
-    console.log("transaction");
+    console.log("transaction started");
     try {
-        await ZonalData.sync();
-        await UnitData.sync();
+        console.log("transaction 1 - preparing payloads");
+        // await ZonalData.sync(); // Removed from inside transaction
+        // await UnitData.sync(); // Removed from inside transaction
+        console.log("transaction 2");
 
         const zonalRows = Array.isArray(payload.zonaldata) ? payload.zonaldata : [];
         const unitRows = Array.isArray(payload.unitdata) ? payload.unitdata : [];
